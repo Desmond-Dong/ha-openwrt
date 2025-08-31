@@ -550,7 +550,6 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
         lambda d: d.get("iw_clients_count", d.get("clients_count", 0)),
         icon=get_wireless_icon(),
         state_class=SensorStateClass.MEASUREMENT,
-        entity_category=EntityCategory.DIAGNOSTIC,
     ))
 
     # 进程传感器

@@ -16,6 +16,11 @@ class OpenWrtRestartButton(CoordinatorEntity, ButtonEntity):
 
     def __init__(self, coordinator, interface_name: str):
         super().__init__(coordinator)
+        # Buttons (restart per-interface) are disabled by default; user must enable them
+        try:
+            self._attr_entity_registry_enabled_default = False
+        except Exception:
+            pass
         self._interface = interface_name
         # Display name: do not prefix with integration name
         # Display name: use translation key with placeholder
@@ -151,6 +156,11 @@ async def async_setup_entry(hass: HomeAssistant, entry, async_add_entities: AddE
     if not hasattr(coordinator, "_reboot_button_created") or not coordinator._reboot_button_created:
         try:
             reboot_ent = OpenWrtRebootButton(coordinator)
+            # Ensure created reboot button is disabled by default
+            try:
+                reboot_ent._attr_entity_registry_enabled_default = False
+            except Exception:
+                pass
             coordinator._button_entities["__reboot__"] = reboot_ent
             async_add_entities([reboot_ent])
             coordinator._reboot_button_created = True
@@ -169,6 +179,11 @@ class OpenWrtRebootButton(CoordinatorEntity, ButtonEntity):
         except Exception:
             self._attr_name = "Reboot Router"
         self._attr_unique_id = f"{coordinator.host}_reboot"
+        # Reboot button is disabled by default; require manual enable in entity registry
+        try:
+            self._attr_entity_registry_enabled_default = False
+        except Exception:
+            pass
         try:
             dev_name = coordinator.host
             try:

@@ -15,6 +15,11 @@ class OpenWrtInterfaceSwitch(CoordinatorEntity, SwitchEntity):
 
     def __init__(self, coordinator, interface_name: str):
         super().__init__(coordinator)
+        # Disable switch entities by default; user must enable them in the entity registry
+        try:
+            self._attr_entity_registry_enabled_default = False
+        except Exception:
+            pass
         self._interface = interface_name
         # Display name: do not prefix with integration name
         self._attr_name = f"{interface_name}"
