@@ -1,7 +1,7 @@
 {
   "domain": "ubus",
   "name": "OpenWrt (ubus)",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "documentation": "https://github.com/Desmond-Dong/ha-openwrt",
   "dependencies": [],
   "codeowners": ["@Desmond-Dong"],
