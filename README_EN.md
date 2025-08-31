@@ -33,7 +33,7 @@ opkg install rpcd-mod-file uhttpd-mod-ubus
 
 ## 🚀 Installation
 
-<details>
+
 <summary>Method 1: Manual Installation</summary>
 
 1. Download the entire `openwrt_monitor` folder
@@ -41,17 +41,10 @@ opkg install rpcd-mod-file uhttpd-mod-ubus
 3. Restart Home Assistant
 4. Add **OpenWrt Monitor** from the Integrations page
 
-</details>
 
-<details>
 <summary>Method 2: HACS Installation</summary>
 
-1. Add this repository as a custom repository in HACS
-2. Search for and install **OpenWrt Monitor**
-3. Restart Home Assistant
-4. Add **OpenWrt Monitor** from the Integrations page
-
-</details>
+ [![OpenWrt Monitor](https://img.shields.io/badge/HACS-OpenWrt__Monitor-41BDF5?style=for-the-badge&logo=home-assistant&logoColor=white)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Desmond-Dong&repository=ha-openwrt&category=integration)
 
 ---
 
