@@ -1,0 +1,82 @@
+{
+  "title": "OpenWrt (ubus)",
+  "config": {
+    "step": {
+      "user": {
+        "title": "配置 OpenWrt 连接",
+        "description": "请输入您的OpenWrt路由器的连接信息。系统将自动测试连接并创建监控传感器。",
+        "data": {
+          "host": "OpenWrt IP 地址",
+          "username": "用户名",
+          "password": "密码",
+          "scan_interval": "扫描间隔（秒，10-300）"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "无法连接到OpenWrt路由器，请检查IP地址和网络连接",
+      "invalid_auth": "用户名或密码错误，请检查登录凭据",
+      "unknown": "发生未知错误，请重试"
+    },
+    "abort": {
+      "already_configured": "该OpenWrt路由器已经配置过了"
+    }
+  },
+  "services": {
+    "ubus": {
+      "restart_interface": {
+        "name": "重启接口",
+        "description": "按名称重启指定的网络接口（尝试 ifdown/ifup、wifi down/up、network.reload 等回退方式）"
+      },
+      "reboot_router": {
+        "name": "重启路由器",
+        "description": "重启目标 OpenWrt 路由器（优先使用 ubus system.reboot，回退到 /sbin/reboot）"
+      }
+    }
+  },
+  "entity": {
+    "button": {
+      "restart": "重启接口",
+      "reboot": "重启路由器"
+    }
+  ,
+    "switch": {
+      "interface": "接口",
+      "wifi": "无线"
+    },
+    "sensor": {
+      "clients": "连接的客户端",
+      "dhcp_leases": "DHCP 租约",
+      "rx_rate": "下载速度",
+      "tx_rate": "上传速度",
+      "signal": "信号强度"
+    },
+    "device": {
+      "router": "路由器"
+    }
+  },
+  "system_hostname": "主机名",
+  "system_version": "固件版本",
+  "system_description": "描述",
+  "system_distribution": "发行版",
+  "system_revision": "修订",
+  "system_architecture": "架构",
+  "cpu_cores": "CPU 核心数",
+  "restart": "重启 {interface}",
+  "reboot": "重启路由器",
+  "switch_interface": "{interface}",
+  "interface_status": "{interface} 状态",
+  "interface_ipv4": "{interface} IPv4 {index}",
+  "interface_ipv6": "{interface} IPv6 {index}",
+  "options": {
+    "step": {
+      "init": {
+        "title": "更新配置选项",
+        "description": "调整OpenWrt监控的扫描间隔。",
+        "data": {
+          "scan_interval": "扫描间隔（秒，10-300）"
+        }
+      }
+    }
+  }
+}

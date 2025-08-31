@@ -1,0 +1,8 @@
+{
+    "name": "OpenWrt (ubus)",
+    "render_readme": true,
+    "country": "CN",
+    "homeassistant": "2025.8.0",
+    "domains": ["ubus"],
+    "iot_class": "local_polling"
+}

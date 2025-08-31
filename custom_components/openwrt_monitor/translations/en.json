@@ -1,0 +1,83 @@
+{
+  "title": "OpenWrt (ubus)",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configure OpenWrt Connection",
+        "description": "Enter connection details for your OpenWrt router. The system will automatically test the connection and create monitoring sensors.",
+        "data": {
+          "host": "OpenWrt IP Address",
+          "username": "Username",
+          "password": "Password",
+          "scan_interval": "Scan Interval (seconds, 10-300)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot connect to OpenWrt router, please check IP address and network connection",
+      "invalid_auth": "Invalid username or password, please check login credentials",
+      "unknown": "An unknown error occurred, please try again"
+    },
+    "abort": {
+      "already_configured": "This OpenWrt router is already configured"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Update Configuration Options",
+        "description": "Adjust the scan interval for OpenWrt monitoring.",
+        "data": {
+          "scan_interval": "Scan Interval (seconds, 10-300)"
+        }
+      }
+    }
+  }
+  ,
+  "services": {
+    "ubus": {
+      "restart_interface": {
+        "name": "Restart interface",
+        "description": "Restart the specified network interface by name (tries ifdown/ifup, wifi down/up, network.reload as fallbacks)"
+      },
+      "reboot_router": {
+        "name": "Reboot router",
+        "description": "Reboot the target OpenWrt router (prefers ubus system.reboot, falls back to /sbin/reboot)"
+      }
+    }
+  },
+  "entity": {
+    "button": {
+      "restart": "Restart Interface",
+      "reboot": "Reboot Router"
+    },
+    "switch": {
+      "interface": "Interface",
+      "wifi": "Wi‑Fi"
+    },
+    "sensor": {
+      "clients": "Connected Clients",
+      "dhcp_leases": "DHCP Leases",
+      "rx_rate": "Download Speed",
+      "tx_rate": "Upload Speed",
+      "signal": "Signal Strength"
+    }
+  },
+  "system_hostname": "Hostname",
+  "system_version": "Firmware Version",
+  "system_description": "Description",
+  "system_distribution": "Distribution",
+  "system_revision": "Revision",
+  "system_architecture": "Architecture",
+  "cpu_cores": "CPU Cores",
+  "device": {
+    "router": "Router"
+  }
+  ,
+  "restart": "Restart {interface}",
+  "reboot": "Reboot Router",
+  "switch_interface": "{interface}",
+  "interface_status": "{interface} Status",
+  "interface_ipv4": "{interface} IPv4 {index}",
+  "interface_ipv6": "{interface} IPv6 {index}"
+}

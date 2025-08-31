@@ -1,0 +1,13 @@
+{
+  "domain": "ubus",
+  "name": "OpenWrt (ubus)",
+  "version": "0.0.1",
+  "documentation": "https://github.com/Desmond-Dong/ha-openwrt",
+  "dependencies": [],
+  "codeowners": ["@Desmond-Dong"],
+  "requirements": ["aiohttp"],
+  "iot_class": "local_polling",
+  "integration_type": "hub",
+  "config_flow": true,
+  "min_homeassistant_core_version": "2025.8.0"
+}
