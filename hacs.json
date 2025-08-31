@@ -4,5 +4,5 @@
     "country": "CN",
     "homeassistant": "2025.8.0",
     "domains": ["ubus"],
-    "iot_class": "local_polling"
+    "iot_class": "local_push"
 }
