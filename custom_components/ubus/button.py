@@ -116,7 +116,10 @@ async def async_setup_entry(hass: HomeAssistant, entry, async_add_entities: AddE
         _LOGGER.debug("No new Restart buttons to create at setup")
 
     # dynamic listener to add buttons when new interfaces appear
-    async def _handle_update():
+    # DataUpdateCoordinator calls listeners synchronously. Use a synchronous
+    # wrapper that schedules the async handler to avoid creating coroutine
+    # objects that are never awaited.
+    async def _async_handle_update():
         try:
             data = coordinator.data or {}
             added = []
@@ -131,6 +134,12 @@ async def async_setup_entry(hass: HomeAssistant, entry, async_add_entities: AddE
                 async_add_entities(added)
         except Exception as e:
             _LOGGER.debug("Error while dynamically adding Restart buttons: %s", e)
+
+    def _handle_update():
+        try:
+            coordinator.hass.async_create_task(_async_handle_update())
+        except Exception as e:
+            _LOGGER.debug("Failed to schedule dynamic button add handler: %s", e)
 
     remove_listener = coordinator.async_add_listener(_handle_update)
     try:

@@ -544,6 +544,15 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
         state_class=SensorStateClass.MEASUREMENT
     ))
 
+    # WiFi 客户端统计（优先使用 iwinfo/hostapd 的统计）
+    entities.append(OpenWrtSensor(
+        coordinator, "WiFi Clients",
+        lambda d: d.get("iw_clients_count", d.get("clients_count", 0)),
+        icon=get_wireless_icon(),
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ))
+
     # 进程传感器
     if data.get("processes"):
         if isinstance(data["processes"], dict) and "processes" in data["processes"]:

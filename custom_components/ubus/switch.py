@@ -145,7 +145,11 @@ async def async_setup_entry(hass: HomeAssistant, entry, async_add_entities: AddE
         _LOGGER.info("No new OpenWrt interface switches created at setup")
 
     # Register a listener to add switches dynamically when new interfaces appear
-    async def _handle_coordinator_update():
+    # Keep the actual update handler async but register a synchronous wrapper
+    # with the coordinator. DataUpdateCoordinator calls listeners synchronously,
+    # so registering an `async def` directly creates coroutine objects that are
+    # never awaited. The wrapper schedules the coroutine on the event loop.
+    async def _async_handle_coordinator_update():
         try:
             data = coordinator.data or {}
             interfaces = data.get("interfaces", {})
@@ -161,6 +165,13 @@ async def async_setup_entry(hass: HomeAssistant, entry, async_add_entities: AddE
                 async_add_entities(added)
         except Exception as e:
             _LOGGER.debug("Error while adding dynamic switches: %s", e)
+
+    def _handle_coordinator_update():
+        # Schedule the async handler on HA's event loop
+        try:
+            coordinator.hass.async_create_task(_async_handle_coordinator_update())
+        except Exception as e:
+            _LOGGER.debug("Failed to schedule coordinator update handler: %s", e)
 
     remove_listener = coordinator.async_add_listener(_handle_coordinator_update)
     # Ensure listener is removed when config entry is unloaded

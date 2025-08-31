@@ -133,10 +133,12 @@ class OpenWrtDataUpdateCoordinator(DataUpdateCoordinator):
                 continue
         
         # 对于可选的 ubus 方法，使用 DEBUG 级别以避免日志噪音；其它情况保留 WARNING
-        if (namespace, method) in OPTIONAL_UBUS_METHODS:
+        # 把 Ubus 调用失败都记录为 DEBUG（避免在正常运行时刷屏），只有在需要时开启 debug 日志查看详情
+        # 动态的 hostapd 对象（如 hostapd.phy0-ap0）调用 get_clients 也视为可选
+        if isinstance(namespace, str) and namespace.startswith("hostapd.") and method == "get_clients":
             _LOGGER.debug("可选 Ubus 方法不可用 %s.%s", namespace, method)
         else:
-            _LOGGER.warning("Ubus调用失败 %s.%s", namespace, method)
+            _LOGGER.debug("Ubus调用失败 %s.%s", namespace, method)
         return None
 
     def _convert_bytes_to_mb(self, bytes_value):
@@ -642,6 +644,58 @@ class OpenWrtDataUpdateCoordinator(DataUpdateCoordinator):
                 data["clients_count"] = total_clients
             except Exception:
                 data["clients_count"] = 0
+
+            # 使用 iwinfo assoclist 补充/验证无线客户端列表并统计
+            try:
+                iw_clients_by_device = {}
+                devices_to_probe = set()
+                # 从 wireless_by_ifname 中收集可能的 device 名称
+                for ifname, entry in (data.get("wireless_by_ifname") or {}).items():
+                    dev = entry.get("device") or entry.get("ifname") or entry.get("name")
+                    if dev:
+                        devices_to_probe.add(dev)
+                        # 也尝试常见的 ap 后缀形式
+                        devices_to_probe.add(f"{dev}-ap0")
+
+                # 也包含已知的 clients 键（例如 hostapd 返回的 phy0-ap0）
+                for k in data.get("clients", {}).keys():
+                    devices_to_probe.add(k)
+
+                total_iw_clients = 0
+                for dev in devices_to_probe:
+                    try:
+                        res = await self._ubus_call("iwinfo", "assoclist", {"device": dev})
+                        if not res:
+                            continue
+
+                        # 解析返回结构，兼容 dict/list
+                        count = 0
+                        if isinstance(res, dict):
+                            # 有些实现返回 'assoclist' 或 'stations' 或直接为列表字段
+                            if "assoclist" in res and isinstance(res["assoclist"], list):
+                                count = len(res["assoclist"])
+                            elif "stations" in res and isinstance(res["stations"], list):
+                                count = len(res["stations"])
+                            else:
+                                # 查找首个为 list 的字段
+                                for v in res.values():
+                                    if isinstance(v, list):
+                                        count = len(v)
+                                        break
+                        elif isinstance(res, list):
+                            count = len(res)
+
+                        if count:
+                            iw_clients_by_device[dev] = count
+                            total_iw_clients += count
+                    except Exception:
+                        continue
+
+                data["iw_clients_by_device"] = iw_clients_by_device
+                data["iw_clients_count"] = total_iw_clients
+            except Exception:
+                data["iw_clients_by_device"] = {}
+                data["iw_clients_count"] = 0
 
             # 尝试通过多个可能的 ubus 接口获取 DHCP 租约数量
             dhcp_count = None
