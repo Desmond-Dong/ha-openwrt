@@ -10,7 +10,6 @@
 ![Home Assistant 2025.8.0+](https://img.shields.io/badge/Home%20Assistant-2025.8.0%2B-blue?style=flat-square)
 ![License MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
 
----
 
 > 理论支持所有 OpenWrt 变体的版本或者第三方编译的版本
 ```bash 

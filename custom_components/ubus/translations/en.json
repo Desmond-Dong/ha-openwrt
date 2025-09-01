@@ -71,7 +71,9 @@
   "system_architecture": "Architecture",
   "cpu_cores": "CPU Cores",
   "device": {
-    "router": "Router"
+    "router": {
+      "name": "Router"
+    }
   }
   ,
   "restart": "Restart {interface}",

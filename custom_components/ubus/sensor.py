@@ -637,4 +637,21 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
                     ))
 
     _LOGGER.info("创建了 %d 个OpenWrt传感器", len(entities))
+    # 从 coordinator.data 中为每个发现的 thermal zone 创建温度传感器
+    try:
+        temps = data.get("temperatures", {})
+        if temps and isinstance(temps, dict):
+            for key, info in temps.items():
+                label = info.get("label") or f"Temperature {info.get('zone')}"
+                zone = info.get("zone")
+                entities.append(OpenWrtSensor(
+                    coordinator,
+                    f"{label} ({zone})",
+                    lambda d, k=key: d.get("temperatures", {}).get(k, {}).get("celsius"),
+                    unit=UnitOfTemperature.CELSIUS,
+                    icon=get_temperature_icon(),
+                    state_class=SensorStateClass.MEASUREMENT,
+                ))
+    except Exception:
+        pass
     async_add_entities(entities)

@@ -821,6 +821,54 @@ class OpenWrtDataUpdateCoordinator(DataUpdateCoordinator):
 
             data["dhcp_leases_count"] = dhcp_count if dhcp_count is not None else 0
 
+            # 读取所有 thermal_zone 温度（通过 ubus file read），自动发现任意数量的 thermal_zoneN
+            temperatures = {}
+            try:
+                async def _read_zone(idx: int):
+                    path_temp = f"/sys/class/thermal/thermal_zone{idx}/temp"
+                    path_type = f"/sys/class/thermal/thermal_zone{idx}/type"
+                    try:
+                        tmp = await self._ubus_call("file", "read", {"path": path_temp})
+                        if not tmp or not isinstance(tmp, dict):
+                            return None
+                        temp_raw = tmp.get("data", "").strip()
+                        t = await self._ubus_call("file", "read", {"path": path_type})
+                        type_name = None
+                        if t and isinstance(t, dict):
+                            type_name = t.get("data", "").strip()
+                        return (idx, type_name or f"thermal_zone{idx}", temp_raw)
+                    except Exception:
+                        return None
+
+                # probe a reasonable range of possible zones (0..31)
+                zone_tasks = [_read_zone(i) for i in range(0, 32)]
+                zone_results = await asyncio.gather(*zone_tasks, return_exceptions=True)
+                for res in zone_results:
+                    if not res or isinstance(res, Exception):
+                        continue
+                    idx, name, temp_raw = res
+                    try:
+                        # temperature usually in millidegrees
+                        val = int(temp_raw)
+                        celsius = round(val / 1000.0, 2)
+                    except Exception:
+                        try:
+                            celsius = float(temp_raw)
+                        except Exception:
+                            continue
+                    label = (name or f"thermal_zone{idx}").replace(" ", "_").replace("/", "_")
+                    key = f"{label}_{idx}"
+                    temperatures[key] = {
+                        "label": name,
+                        "celsius": celsius,
+                        "raw": temp_raw,
+                        "zone": idx
+                    }
+            except Exception as e:
+                _LOGGER.debug("Error probing thermal zones: %s", e)
+
+            data["temperatures"] = temperatures
+
             # 计算速率（如果有之前的数据）
             if self._previous_data:
                 data["rates"] = self._calculate_rates(data, self._previous_data)
