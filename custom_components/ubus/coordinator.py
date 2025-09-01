@@ -825,8 +825,8 @@ class OpenWrtDataUpdateCoordinator(DataUpdateCoordinator):
             temperatures = {}
             try:
                 async def _read_zone(idx: int):
-                    path_temp = f"/sys/class/thermal/thermal_zone{idx}/temp"
-                    path_type = f"/sys/class/thermal/thermal_zone{idx}/type"
+                    path_temp = f"/sys/class/hwmon/hwmon{idx}/temp1_input"
+                    path_type = f"/sys/class/hwmon/hwmon{idx}/name"
                     try:
                         tmp = await self._ubus_call("file", "read", {"path": path_temp})
                         if not tmp or not isinstance(tmp, dict):
