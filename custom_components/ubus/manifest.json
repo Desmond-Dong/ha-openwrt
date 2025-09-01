@@ -6,5 +6,6 @@
   "codeowners": ["@Desmond-Dong"],
   "requirements": ["aiohttp"],
   "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/Desmond-Dong/ha-openwrt/issues",
   "config_flow": true
 }
