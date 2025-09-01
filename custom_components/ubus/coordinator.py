@@ -868,7 +868,40 @@ class OpenWrtDataUpdateCoordinator(DataUpdateCoordinator):
                 _LOGGER.debug("Error probing thermal zones: %s", e)
 
             data["temperatures"] = temperatures
+            
+            connections = {}
+            try:
+                # 直接读取绝对路径的 nf_conntrack_count 和 nf_conntrack_max
+                path_count = "/proc/sys/net/netfilter/nf_conntrack_count"
+                path_max = "/proc/sys/net/netfilter/nf_conntrack_max"
 
+                tmp = await self._ubus_call("file", "read", {"path": path_count})
+                t = await self._ubus_call("file", "read", {"path": path_max})
+
+                # 这个读出来的就是一个直接的数值
+                count_val = None
+                max_val = None
+
+                if tmp and isinstance(tmp, dict):
+                    try:
+                        count_val = int(tmp.get("data", "").strip())
+                    except Exception:
+                        count_val = None
+
+                if t and isinstance(t, dict):
+                    try:
+                        max_val = int(t.get("data", "").strip())
+                    except Exception:
+                        max_val = None
+
+                connections["nf_conntrack"] = {
+                    "count": count_val,
+                    "max": max_val,
+                }
+            except Exception as e:
+                _LOGGER.debug("Error reading nf_conntrack: %s", e)
+
+            data["connections"] = connections
             # 计算速率（如果有之前的数据）
             if self._previous_data:
                 data["rates"] = self._calculate_rates(data, self._previous_data)

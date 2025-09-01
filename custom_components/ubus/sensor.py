@@ -654,4 +654,29 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
                 ))
     except Exception:
         pass
+
+    # 修正 connections 相关实体的创建逻辑
+    # 只要 connections 存在且为 dict，就尝试创建 nf_conntrack 相关实体
+    connections = data.get("connections")
+    if isinstance(connections, dict):
+        nf_conntrack = connections.get("nf_conntrack")
+        if isinstance(nf_conntrack, dict):
+            if "count" in nf_conntrack:
+                entities.append(OpenWrtSensor(
+                    coordinator,
+                    "NF Conntrack Count",
+                    lambda d: d.get("connections", {}).get("nf_conntrack", {}).get("count", 0),
+                    icon=get_network_icon(),
+                    state_class=SensorStateClass.MEASUREMENT,
+                ))
+            if "max" in nf_conntrack:
+                entities.append(OpenWrtSensor(
+                    coordinator,
+                    "NF Conntrack Max",
+                    lambda d: d.get("connections", {}).get("nf_conntrack", {}).get("max", 0),
+                    icon=get_network_icon(),
+                    state_class=SensorStateClass.MEASUREMENT,
+                    entity_category=EntityCategory.DIAGNOSTIC,
+                ))
+
     async_add_entities(entities)
