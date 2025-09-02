@@ -112,6 +112,12 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
             entity_category=EntityCategory.DIAGNOSTIC,
         ),
         OpenWrtSensor(
+            coordinator, "Model", 
+            lambda d: d.get("system_board", {}).get("model", "N/A"),
+            icon=get_system_icon(),
+            entity_category=EntityCategory.DIAGNOSTIC,
+        ),
+        OpenWrtSensor(
             coordinator, "Version", 
             lambda d: d.get("system_board", {}).get("release", {}).get("version", "N/A"),
             icon=get_system_icon(),
@@ -132,6 +138,12 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
         OpenWrtSensor(
             coordinator, "Revision", 
             lambda d: d.get("system_board", {}).get("release", {}).get("revision", "N/A"),
+            icon=get_system_icon(),
+            entity_category=EntityCategory.DIAGNOSTIC,
+        ),
+        OpenWrtSensor(
+            coordinator, "Target", 
+            lambda d: d.get("system_board", {}).get("release", {}).get("target", "N/A"),
             icon=get_system_icon(),
             entity_category=EntityCategory.DIAGNOSTIC,
         ),
@@ -301,19 +313,44 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
                         ))
 
     # 看门狗传感器
-    if data.get("watchdog"):
-        if isinstance(data["watchdog"], dict):
+    if data.get("watchdog") and isinstance(data["watchdog"], dict):
+        watchdog = data["watchdog"]
+        # Watchdog Status
+        entities.append(OpenWrtSensor(
+            coordinator,
+            "Watchdog Status",
+            lambda d: d.get("watchdog", {}).get("status", "N/A"),
+            icon=get_watchdog_icon(),
+            entity_category=EntityCategory.DIAGNOSTIC,
+        ))
+        # Watchdog Timeout
+        entities.append(OpenWrtSensor(
+            coordinator,
+            "Watchdog Timeout",
+            lambda d: d.get("watchdog", {}).get("timeout", 0),
+            unit=UnitOfTime.SECONDS,
+            icon=get_watchdog_icon(),
+            state_class=SensorStateClass.MEASUREMENT,
+            entity_category=EntityCategory.DIAGNOSTIC,
+        ))
+        # Watchdog Frequency
+        if "frequency" in watchdog:
             entities.append(OpenWrtSensor(
-                coordinator, "Watchdog Status", 
-                lambda d: d.get("watchdog", {}).get("status", "N/A"),
-                icon=get_watchdog_icon()
-            ))
-            entities.append(OpenWrtSensor(
-                coordinator, "Watchdog Timeout", 
-                lambda d: d.get("watchdog", {}).get("timeout", 0),
+                coordinator,
+                "Watchdog Frequency",
+                lambda d: d.get("watchdog", {}).get("frequency", 0),
                 unit=UnitOfTime.SECONDS,
                 icon=get_watchdog_icon(),
                 state_class=SensorStateClass.MEASUREMENT,
+                entity_category=EntityCategory.DIAGNOSTIC,
+            ))
+        # Watchdog Magicclose
+        if "magicclose" in watchdog:
+            entities.append(OpenWrtSensor(
+                coordinator,
+                "Watchdog Magicclose",
+                lambda d: "Yes" if d.get("watchdog", {}).get("magicclose", False) else "No",
+                icon=get_watchdog_icon(),
                 entity_category=EntityCategory.DIAGNOSTIC,
             ))
 

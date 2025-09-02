@@ -15,7 +15,7 @@
 ```bash 
 # OpenWrt需要安装以下包,可以直接复制到命令行运行
 opkg update
-opkg install rpcd-mod-file uhttpd-mod-ubus
+opkg install rpcd-mod-file uhttpd-mod-ubus rpcd-mod-iwinfo rpcd-mod-luci ubusd rpcd uhttpd-mod-ubus ucode-mod-ubus rpcd-mod-rpcsys
 ```
 ---
 
