@@ -59,11 +59,21 @@
       "wifi": "Wi‑Fi"
     },
     "sensor": {
-      "clients": "Connected Clients",
-      "dhcp_leases": "DHCP Leases",
-      "rx_rate": "Download Speed",
-      "tx_rate": "Upload Speed",
-      "signal": "Signal Strength"
+      "clients": {
+        "name": "Connected Clients"
+      },
+      "dhcp_leases": {
+        "name": "DHCP Leases"
+      },
+      "rx_rate": {
+        "name": "Download Speed"
+      },
+      "tx_rate": {
+        "name": "Upload Speed"
+      },
+      "signal": {
+        "name": "Signal Strength"
+      }
     }
   },
   "system_hostname": "Hostname",
