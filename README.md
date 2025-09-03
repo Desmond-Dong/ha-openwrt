@@ -11,7 +11,7 @@
 ![License MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
 
 
-> 理论支持所有 OpenWrt 变体的版本或者第三方编译的版本
+> 理论支持OpenWrt 变体的版本或者第三方编译的版本 （**已知问题：iStoreOS使用此集成可能会崩**）
 ```bash 
 # OpenWrt需要安装以下包,可以直接复制到命令行运行
 opkg update
