@@ -109,7 +109,5 @@
   "restart": "Restart {interface}",
   "reboot": "Reboot Router",
   "switch_interface": "{interface}",
-  "interface_status": "{interface} Status",
-  "interface_ipv4": "{interface} IPv4 {index}",
-  "interface_ipv6": "{interface} IPv6 {index}"
+  "interface_status": "{interface} Status"
 }
