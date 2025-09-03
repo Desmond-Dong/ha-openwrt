@@ -1,11 +1,11 @@
 {
   "domain": "ubus",
   "name": "OpenWrt (ubus)",
-  "version": "0.0.3",
-  "documentation": "https://github.com/Desmond-Dong/ha-openwrt",
   "codeowners": ["@Desmond-Dong"],
-  "requirements": ["aiohttp"],
+  "config_flow": true,
+  "documentation": "https://github.com/Desmond-Dong/ha-openwrt",
   "iot_class": "local_polling",
   "issue_tracker": "https://github.com/Desmond-Dong/ha-openwrt/issues",
-  "config_flow": true
+  "requirements": ["aiohttp"],
+  "version": "0.0.3"
 }
