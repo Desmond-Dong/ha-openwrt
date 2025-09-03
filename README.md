@@ -27,7 +27,8 @@ opkg install rpcd-mod-file uhttpd-mod-ubus rpcd-mod-iwinfo rpcd-mod-luci ubusd r
 | CPU核心数、负载（%） | 网络设备类型、状态、MTU |  |  |
 | 内存总量/可用/缓存/缓冲/共享（MB） | 无线接口状态、模式 |  |  |
 | 文件系统使用（MB） | DNS服务器配置 |  |  |
-| 系统运行时间（秒） |  |  |  |
+| 系统运行时间（s） |  |  |  |
+| 系统温度（℃） |  |  |  |
 
 ---
 
