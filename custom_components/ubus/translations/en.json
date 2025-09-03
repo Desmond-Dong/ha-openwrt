@@ -32,8 +32,7 @@
         }
       }
     }
-  }
-  ,
+  },
   "services": {
     "ubus": {
       "restart_interface": {
@@ -48,8 +47,12 @@
   },
   "entity": {
     "button": {
-      "restart": "Restart Interface",
-      "reboot": "Reboot Router"
+      "restart": {
+        "name": "Restart Interface"
+      },
+      "reboot": {
+        "name": "Reboot Router"
+      }
     },
     "switch": {
       "interface": "Interface",
@@ -74,8 +77,7 @@
     "router": {
       "name": "Router"
     }
-  }
-  ,
+  },
   "restart": "Restart {interface}",
   "reboot": "Reboot Router",
   "switch_interface": "{interface}",
