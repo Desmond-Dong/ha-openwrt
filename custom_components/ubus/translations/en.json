@@ -35,14 +35,8 @@
   },
   "services": {
     "ubus": {
-      "restart_interface": {
-        "name": "Restart interface",
-        "description": "Restart the specified network interface by name (tries ifdown/ifup, wifi down/up, network.reload as fallbacks)"
-      },
-      "reboot_router": {
-        "name": "Reboot router",
-        "description": "Reboot the target OpenWrt router (prefers ubus system.reboot, falls back to /sbin/reboot)"
-      }
+      "name": "ubus Services",
+      "description": "Services provided by the OpenWrt ubus integration."
     }
   },
   "entity": {
@@ -83,30 +77,9 @@
       }
     }
   },
-  "system_hostname": {
-    "name": "Hostname"
-  },
-  "system_version": {
-    "name": "Firmware Version"
-  },
-  "system_description": {
-    "name": "Description"
-  },
-  "system_distribution": {
-    "name": "Distribution"
-  },
-  "system_revision": {
-    "name": "Revision"
-  },
-  "system_architecture": {
-    "name": "Architecture"
-  },
   "device": {
     "router": {
       "name": "Router"
     }
-  },
-  "restart": "Restart {interface}",
-  "reboot": "Reboot Router",
-  "switch_interface": "{interface}"
+  }
 }
