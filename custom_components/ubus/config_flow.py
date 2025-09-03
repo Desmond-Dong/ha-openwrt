@@ -3,12 +3,16 @@ from homeassistant import config_entries
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.core import callback
 from homeassistant.exceptions import HomeAssistantError
+from homeassistant.helpers import config_validation as cv
 from .const import DOMAIN, CONF_HOST, CONF_USERNAME, CONF_PASSWORD, CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL
 import aiohttp
 import logging
 import asyncio
 
 _LOGGER = logging.getLogger(__name__)
+
+# This integration is config entry only; add config_entry_only_config_schema for compliance
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
 class CannotConnect(HomeAssistantError):
     """Error to indicate we cannot connect."""
@@ -24,19 +28,19 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self._data = {}
 
     async def async_step_user(self, user_input=None) -> FlowResult:
-        """第一步：用户输入连接信息"""
+        """First step: User input connection info"""
         errors = {}
         
         if user_input is not None:
             try:
-                # 测试连接
+                # Test connection
                 await self._test_connection(
                     user_input[CONF_HOST],
                     user_input[CONF_USERNAME],
                     user_input[CONF_PASSWORD]
                 )
                 
-                # 检查是否已配置
+                # Check if already configured
                 await self.async_set_unique_id(user_input[CONF_HOST])
                 self._abort_if_unique_id_configured()
                 
@@ -67,10 +71,10 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         )
 
     async def _test_connection(self, host, username, password):
-        """测试OpenWrt连接"""
+        """Test OpenWrt connection"""
         try:
             async with aiohttp.ClientSession() as session:
-                # 测试登录
+                # Test login
                 url = f"http://{host}/ubus"
                 payload = {
                     "jsonrpc": "2.0",
@@ -95,7 +99,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     if "result" not in data or len(data["result"]) < 2:
                         raise InvalidAuth()
                     
-                    # 测试基本API调用
+                    # Test basic API call
                     session_id = data["result"][1]["ubus_rpc_session"]
                     test_payload = {
                         "jsonrpc": "2.0",
@@ -133,7 +137,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         self._config_entry = config_entry
 
     async def async_step_init(self, user_input=None):
-        """配置选项"""
+        """Options configuration"""
         errors = {}
         if user_input is not None:
             return self.async_create_entry(title="", data=user_input)
