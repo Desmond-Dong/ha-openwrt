@@ -55,8 +55,12 @@
       }
     },
     "switch": {
-      "interface": "Interface",
-      "wifi": "Wi‑Fi"
+      "interface": {
+        "name": "Interface"
+      },
+      "wifi": {
+        "name": "Wi‑Fi"
+      }
     },
     "sensor": {
       "clients": {
@@ -76,13 +80,27 @@
       }
     }
   },
-  "system_hostname": "Hostname",
-  "system_version": "Firmware Version",
-  "system_description": "Description",
-  "system_distribution": "Distribution",
-  "system_revision": "Revision",
-  "system_architecture": "Architecture",
-  "cpu_cores": "CPU Cores",
+  "system_hostname": {
+    "name": "Hostname"
+  },
+  "system_version": {
+    "name": "Firmware Version"
+  },
+  "system_description": {
+    "name": "Description"
+  },
+  "system_distribution": {
+    "name": "Distribution"
+  },
+  "system_revision": {
+    "name": "Revision"
+  },
+  "system_architecture": {
+    "name": "Architecture"
+  },
+  "cpu_cores": {
+    "name": "CPU Cores"
+  },
   "device": {
     "router": {
       "name": "Router"
@@ -95,3 +113,4 @@
   "interface_ipv4": "{interface} IPv4 {index}",
   "interface_ipv6": "{interface} IPv6 {index}"
 }
+/// End of Selection
