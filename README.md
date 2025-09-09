@@ -1,4 +1,7 @@
 
+**此项目已停止开发，当我做完发布之后，别人提交了一个更完善的版本到HACS我才发现我重复劳动了**
+**可以直接在HACS里安装或者进入作者[仓库地址](https://github.com/FUjr/homeassistant-openwrt-ubus)**
+
 ![OpenWrt Monitor - Home Assistant](https://img.shields.io/badge/OpenWrt%20Monitor-Home%20Assistant-blue?style=for-the-badge&logo=home-assistant)
 
 # OpenWrt Monitor - Home Assistant 集成  [English](./README_EN.md)
